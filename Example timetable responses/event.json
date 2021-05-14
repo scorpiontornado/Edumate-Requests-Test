@@ -1,0 +1,194 @@
+{
+  "label": "Wed, 12<sup>th</sup> May 2021",
+  "SQLDate": "2021-05-12",
+  "events": [
+    {
+      "eventType": "class",
+      "startDateTime": {
+        "date": "2021-05-12 08:30:00.000000",
+        "timezone_type": 3,
+        "timezone": "Australia/SYDNEY"
+      },
+      "endDateTime": {
+        "date": "2021-05-12 09:29:00.000000",
+        "timezone_type": 3,
+        "timezone": "Australia/SYDNEY"
+      },
+      "activityName": "11IB Computer Science HL 1 (B125 Computer Room)",
+      "displayTime": "Period 1 (08:30 am)",
+      "period": "1",
+      "strCount": 26,
+      "room": " (B125 Computer Room)",
+      "time": "08:30",
+      "subMenuDataURL": "show",
+      "links": [
+        {
+          "text": "<div style=\"font-size: 13px; font-weight: bold;\">Email Teacher</div>",
+          "href": "mailto:?subject=RE:11IB Computer Science HL 1&bcc=mthill@sacs.nsw.edu.au",
+          "xtype": "edutoolbarcalendarbuttonmenuitem"
+        }
+      ]
+    },
+    {
+      "eventType": "class",
+      "startDateTime": {
+        "date": "2021-05-12 09:35:00.000000",
+        "timezone_type": 3,
+        "timezone": "Australia/SYDNEY"
+      },
+      "endDateTime": {
+        "date": "2021-05-12 10:34:00.000000",
+        "timezone_type": 3,
+        "timezone": "Australia/SYDNEY"
+      },
+      "activityName": "11IB Language and Literature HL 1 (Room B304)",
+      "displayTime": "Period 2 (09:35 am)",
+      "period": "2",
+      "strCount": 33,
+      "room": " (Room B304)",
+      "time": "09:35",
+      "subMenuDataURL": "show",
+      "links": [
+        {
+          "text": "<div style=\"font-size: 13px; font-weight: bold;\">Email Teacher</div>",
+          "href": "mailto:?subject=RE:11IB Language and Literature HL 1&bcc=ngoodman@sacs.nsw.edu.au",
+          "xtype": "edutoolbarcalendarbuttonmenuitem"
+        }
+      ]
+    },
+    {
+      "eventType": "class",
+      "startDateTime": {
+        "date": "2021-05-12 10:55:00.000000",
+        "timezone_type": 3,
+        "timezone": "Australia/SYDNEY"
+      },
+      "endDateTime": {
+        "date": "2021-05-12 11:54:00.000000",
+        "timezone_type": 3,
+        "timezone": "Australia/SYDNEY"
+      },
+      "activityName": "11IB Physics HL 1 (B102 Science Lab)",
+      "displayTime": "Period 3 (10:55 am)",
+      "period": "3",
+      "strCount": 17,
+      "room": " (B102 Science Lab)",
+      "time": "10:55",
+      "subMenuDataURL": "show",
+      "links": [
+        {
+          "text": "<div style=\"font-size: 13px; font-weight: bold;\">Email Teacher</div>",
+          "href": "mailto:?subject=RE:11IB Physics HL 1&bcc=sfoster@sacs.nsw.edu.au",
+          "xtype": "edutoolbarcalendarbuttonmenuitem"
+        }
+      ]
+    },
+    {
+      "eventType": "class",
+      "startDateTime": {
+        "date": "2021-05-12 12:00:00.000000",
+        "timezone_type": 3,
+        "timezone": "Australia/SYDNEY"
+      },
+      "endDateTime": {
+        "date": "2021-05-12 12:29:00.000000",
+        "timezone_type": 3,
+        "timezone": "Australia/SYDNEY"
+      },
+      "activityName": "11 Tutorial WE (Room B302)",
+      "displayTime": "Period T (12:00 pm)",
+      "period": "T",
+      "strCount": 14,
+      "room": " (Room B302)",
+      "time": "12:00",
+      "subMenuDataURL": "show",
+      "links": [
+        {
+          "text": "<div style=\"font-size: 13px; font-weight: bold;\">Email Teacher</div>",
+          "href": "mailto:?subject=RE:11 Tutorial WE&bcc=asharman@sacs.nsw.edu.au",
+          "xtype": "edutoolbarcalendarbuttonmenuitem"
+        }
+      ]
+    },
+    {
+      "eventType": "event",
+      "startDateTime": {
+        "date": "2021-05-12 12:00:00.000000",
+        "timezone_type": 3,
+        "timezone": "Australia/SYDNEY"
+      },
+      "endDateTime": {
+        "date": "2021-05-12 12:29:00.000000",
+        "timezone_type": 3,
+        "timezone": "Australia/SYDNEY"
+      },
+      "activityName": "Event: Yr 7 Westminster Peer Support Program (S436)",
+      "displayTime": "12:00 pm - 12:29 pm",
+      "strCount": 44,
+      "room": " (S436)",
+      "time": "12:00",
+      "subMenuDataURL": "show",
+      "links": [
+        {
+          "text": "<div style=\"font-size: 13px; font-weight: bold;\">Details</div>",
+          "xtype": "edutoolbarnewbuttonmenuitemeventdetail",
+          "eventId": 50517
+        }
+      ]
+    },
+    {
+      "eventType": "class",
+      "startDateTime": {
+        "date": "2021-05-12 13:10:00.000000",
+        "timezone_type": 3,
+        "timezone": "Australia/SYDNEY"
+      },
+      "endDateTime": {
+        "date": "2021-05-12 14:09:00.000000",
+        "timezone_type": 3,
+        "timezone": "Australia/SYDNEY"
+      },
+      "activityName": "11IB Mathematics Analysis &amp; Approaches HL 1 (Room B308)",
+      "displayTime": "Period 4 (01:10 pm)",
+      "period": "4",
+      "strCount": 47,
+      "room": " (Room B308)",
+      "time": "13:10",
+      "subMenuDataURL": "show",
+      "links": [
+        {
+          "text": "<div style=\"font-size: 13px; font-weight: bold;\">Email Teacher</div>",
+          "href": "mailto:?subject=RE:11IB Mathematics Analysis &amp; Approaches HL 1&bcc=bperry@sacs.nsw.edu.au",
+          "xtype": "edutoolbarcalendarbuttonmenuitem"
+        }
+      ]
+    },
+    {
+      "eventType": "class",
+      "startDateTime": {
+        "date": "2021-05-12 14:15:00.000000",
+        "timezone_type": 3,
+        "timezone": "Australia/SYDNEY"
+      },
+      "endDateTime": {
+        "date": "2021-05-12 15:14:00.000000",
+        "timezone_type": 3,
+        "timezone": "Australia/SYDNEY"
+      },
+      "activityName": "11IB Offline Language SL 1 (No Room)",
+      "displayTime": "Period 5 (02:15 pm)",
+      "period": "5",
+      "strCount": 26,
+      "room": " (No Room)",
+      "time": "14:15",
+      "subMenuDataURL": "show",
+      "links": [
+        {
+          "text": "<div style=\"font-size: 13px; font-weight: bold;\">Email Teacher</div>",
+          "href": "mailto:?subject=RE:11IB Offline Language SL 1&bcc=",
+          "xtype": "edutoolbarcalendarbuttonmenuitem"
+        }
+      ]
+    }
+  ]
+}

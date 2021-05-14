@@ -1,4 +1,4 @@
-# Most current version of the code as of 4/05/2021
+# Most current version of the code as of 13/05/2021
 
 # Order of requests:
   # Request 1: Get request to url1 - response contains Authstate parameter (generated each time)
@@ -6,295 +6,139 @@
   # Request 3: Post request to url3 - data: SAMLRespone, sets PHPSESSID cookie
   # Request 4: Get request to url4 - response contains the timetable json, requires PHPSESSID cookie
 
+import os
+
 import requests
 from bs4 import BeautifulSoup
 import json
+import html
 
-# the session automatically handles the cookies for me.
-with requests.Session() as s:
-  ### request 1
-  # Get AuthState parameter (needed in order log in)
-  
-  url1 = "https://edumate.sacs.nsw.edu.au/sacs/web/app.php/sso-login/?return_path=dashboard%2Fmy-edumate%2F"
-  
-  r = s.get(url1) # requests automatically follows redirects to the login form. Response contains the "AuthState" parameter (needed for logging in - request 2)
+import time # to test runtime
 
-  soup = BeautifulSoup(r.text, "html.parser")
+def get_timetable(session, url_stem, my_date):
+  response = session.get(url_stem + my_date)
 
-  for input_tag in soup.find_all("input"):
-    input_type = input_tag.attrs.get("type", "text")
-    if input_type == "hidden":
-      input_name = input_tag.attrs.get("name")
-      input_value = input_tag.attrs.get("value")
-
-      # Set necessary values for the login in request 2 - username, password, authstate
-      payload = {'username':input("Username: "), 'password':input("Password: "), input_name:input_value}
-      
-      break
-  
-  ### request 2
-  # Log in
-
-  url2 = "https://sacs-login.cloudworkengine.net/module.php/core/loginuserpass.php?"
-
-  r2 = s.post(url2, data=payload)
-
-  soup2 = BeautifulSoup(r2.text, "html.parser")
-  payload2 = {}
-
-  for input_tag in soup2.find_all("input"):
-    input_type = input_tag.attrs.get("type", "text")
-    if input_type == "hidden":
-      input_name = input_tag.attrs.get("name")
-      input_value = input_tag.attrs.get("value")
-
-      payload2[input_name] = input_value
-
-  ### request 3
-  # Get PHPSESSID cookie (needed to access timetable)
-  url3 = "https://edumate.sacs.nsw.edu.au/sacs/web/app.php/saml/acs"
-
-  r3 = s.post(url3, data=payload2)
-
-  ### request 4
-  # Get timetable json
-  
-  # example url: https://edumate.sacs.nsw.edu.au/sacs/web/app.php/admin/get-day-calendar/20210323
-
-  my_date = input("\nDate (YYYYMMDD or today/tomorrow etc.): ") 
-  while my_date:
-    url4 = "https://edumate.sacs.nsw.edu.au/sacs/web/app.php/admin/get-day-calendar/" + my_date
-
-    r4 = s.get(url4)
+  timetable = []
     
-    if r4.status_code == 200:
-      timetable_json = r4.json()
+  if response.status_code == 200:
+    # Will also return 200 if login fails 
+    # Check if login is successful
+    #print (response.headers.get('content-type')) # always: text/plain; charset=UTF-8
+    #print(response.content) # looks like json to me..
+    try:
+      timetable_json = response.json()
 
 
       timetable_data = json.dumps(timetable_json, indent=2) # makes it look pretty for printing, converts into a string
 
+      #print(timetable_data)
+
       # Get class in each period:
       for i, event in enumerate(timetable_json["events"]):
         event_type = event["eventType"]
-        activity_name = event["activityName"]
+        activity_name = html.unescape(event["activityName"])
         if event_type == "class":
-          period = event["period"]
-          print(f"Period\t{period}: {activity_name}")
-        elif event_type == "event":
-          # could also do event["displayTime"] (this is in both events and classes)
-          print(f"\t{activity_name}")
-        
+          period = html.unescape(event["period"])
+          timetable.append(f"Period\t{period}: {activity_name}")
+        else:
+          # event_type == "activity", "event" etc
+          display_time = html.unescape(event["displayTime"]) # probably not necessary
+          timetable.append(f"\t{display_time}:\n\t\t{activity_name}")
+    except ValueError:
+      print("Login failed")
+      timetable = -1
+  else:
+    timetable = ["Invalid date"]
+  
+  return timetable
 
-    else:
-      print("Invalid date")
+def main():
+  # the session automatically handles the cookies for me.
+  with requests.Session() as s:
+    print("Connecting to Edumate...")
+    ### request 1
+    # Get AuthState parameter (needed in order log in)
     
+    url1 = "https://edumate.sacs.nsw.edu.au/sacs/web/app.php/sso-login/?return_path=dashboard%2Fmy-edumate%2F"
+    
+    r = s.get(url1) # requests automatically follows redirects to the login form. Response contains the "AuthState" parameter (needed for logging in - request 2)
+
+    soup = BeautifulSoup(r.text, "html.parser")
+
+    for input_tag in soup.find_all("input"):
+      input_type = input_tag.attrs.get("type", "text")
+      if input_type == "hidden":
+        input_name = input_tag.attrs.get("name")
+        input_value = input_tag.attrs.get("value")
+
+        # Set necessary values for the login in request 2 - username, password, authstate
+        # Will only prompt user for username and password if the environment variables are not set (replit secrets)
+        # They will not be set for anyone who doesn't have edit privledges (e.g. anonymous user, someone forking)
+        username = os.environ['username'] if 'username' in os.environ else input("Username: ")
+        password = os.environ['password'] if 'password' in os.environ else input("Password: ")
+
+        payload = {'username':username, 'password':password, input_name:input_value}
+        
+        break
+    
+    ### request 2
+    # Log in
+
+    url2 = "https://sacs-login.cloudworkengine.net/module.php/core/loginuserpass.php?"
+
+    r2 = s.post(url2, data=payload)
+
+    # Will return 200 if successful or not... maybe bc it redirects back to the login page.
+
+    print("Login attempted...")
+
+    soup2 = BeautifulSoup(r2.text, "html.parser")
+    payload2 = {}
+
+    for input_tag in soup2.find_all("input"):
+      input_type = input_tag.attrs.get("type", "text")
+      if input_type == "hidden":
+        input_name = input_tag.attrs.get("name")
+        input_value = input_tag.attrs.get("value")
+
+        payload2[input_name] = input_value
+
+    ### request 3
+    # Get PHPSESSID cookie (needed to access timetable)
+    url3 = "https://edumate.sacs.nsw.edu.au/sacs/web/app.php/saml/acs"
+
+    r3 = s.post(url3, data=payload2)
+
+    ### request 4
+    # Get timetable json
+    
+    # example url: https://edumate.sacs.nsw.edu.au/sacs/web/app.php/admin/get-day-calendar/20210323
+
+    url4_stem = "https://edumate.sacs.nsw.edu.au/sacs/web/app.php/admin/get-day-calendar/"
+
+    timetable = get_timetable(s, url4_stem, "today")
+    print("\nToday's timetable:", "\n".join(timetable), sep="\n")
+
+    # return # for time testing
+
     my_date = input("\nDate (YYYYMMDD or today/tomorrow etc.): ")
+    while my_date:
+      timetable = get_timetable(s, url4_stem, my_date)
 
+      if timetable == -1:
+        break
+      print("\n".join(timetable))
 
-# Example response:
+      my_date = input("\nDate (YYYYMMDD or today/tomorrow etc.): ")
 
-''' timetable_data:
+#start_time = time.time()
 
-{
-  "label": "Tue, 20<sup>th</sup> Apr 2021",
-  "SQLDate": "2021-04-20",
-  "events": [
-    {
-      "eventType": "class",
-      "startDateTime": {
-        "date": "2021-04-20 07:30:00.000000",
-        "timezone_type": 3,
-        "timezone": "Australia/SYDNEY"
-      },
-      "endDateTime": {
-        "date": "2021-04-20 08:29:00.000000",
-        "timezone_type": 3,
-        "timezone": "Australia/SYDNEY"
-      },
-      "activityName": "CM Wind Symphony (Chapter House)",
-      "displayTime": "Period 0 (07:30 am)",
-      "period": "0",
-      "strCount": 16,
-      "room": " (Chapter House)",
-      "time": "07:30",
-      "subMenuDataURL": "show",
-      "links": [
-        {
-          "text": "<div style=\"font-size: 13px; font-weight: bold;\">Email Teacher</div>",
-          "href": "mailto:?subject=RE:CM Wind Symphony&bcc=cwatson@sacs.nsw.edu.au",
-          "xtype": "edutoolbarcalendarbuttonmenuitem"
-        }
-      ]
-    },
-    {
-      "eventType": "class",
-      "startDateTime": {
-        "date": "2021-04-20 08:30:00.000000",
-        "timezone_type": 3,
-        "timezone": "Australia/SYDNEY"
-      },
-      "endDateTime": {
-        "date": "2021-04-20 09:29:00.000000",
-        "timezone_type": 3,
-        "timezone": "Australia/SYDNEY"
-      },
-      "activityName": "11IB Language and Literature HL 1 (Room B304)",
-      "displayTime": "Period 1 (08:30 am)",
-      "period": "1",
-      "strCount": 33,
-      "room": " (Room B304)",
-      "time": "08:30",
-      "subMenuDataURL": "show",
-      "links": [
-        {
-          "text": "<div style=\"font-size: 13px; font-weight: bold;\">Email Teacher</div>",
-          "href": "mailto:?subject=RE:11IB Language and Literature HL 1&bcc=ngoodman@sacs.nsw.edu.au",
-          "xtype": "edutoolbarcalendarbuttonmenuitem"
-        }
-      ]
-    },
-    {
-      "eventType": "class",
-      "startDateTime": {
-        "date": "2021-04-20 09:35:00.000000",
-        "timezone_type": 3,
-        "timezone": "Australia/SYDNEY"
-      },
-      "endDateTime": {
-        "date": "2021-04-20 10:34:00.000000",
-        "timezone_type": 3,
-        "timezone": "Australia/SYDNEY"
-      },
-      "activityName": "11IB Business Management SL 1 (Room B205)",
-      "displayTime": "Period 2 (09:35 am)",
-      "period": "2",
-      "strCount": 29,
-      "room": " (Room B205)",
-      "time": "09:35",
-      "subMenuDataURL": "show",
-      "links": [
-        {
-          "text": "<div style=\"font-size: 13px; font-weight: bold;\">Email Teacher</div>",
-          "href": "mailto:?subject=RE:11IB Business Management SL 1&bcc=alarkin@sacs.nsw.edu.au",
-          "xtype": "edutoolbarcalendarbuttonmenuitem"
-        }
-      ]
-    },
-    {
-      "eventType": "class",
-      "startDateTime": {
-        "date": "2021-04-20 10:55:00.000000",
-        "timezone_type": 3,
-        "timezone": "Australia/SYDNEY"
-      },
-      "endDateTime": {
-        "date": "2021-04-20 11:54:00.000000",
-        "timezone_type": 3,
-        "timezone": "Australia/SYDNEY"
-      },
-      "activityName": "11IB Physics HL 1 (Room B401)",
-      "displayTime": "Period 3 (10:55 am)",
-      "period": "3",
-      "strCount": 17,
-      "room": " (Room B401)",
-      "time": "10:55",
-      "subMenuDataURL": "show",
-      "links": [
-        {
-          "text": "<div style=\"font-size: 13px; font-weight: bold;\">Email Teacher</div>",
-          "href": "mailto:?subject=RE:11IB Physics HL 1&bcc=sfoster@sacs.nsw.edu.au",
-          "xtype": "edutoolbarcalendarbuttonmenuitem"
-        }
-      ]
-    },
-    {
-      "eventType": "class",
-      "startDateTime": {
-        "date": "2021-04-20 12:00:00.000000",
-        "timezone_type": 3,
-        "timezone": "Australia/SYDNEY"
-      },
-      "endDateTime": {
-        "date": "2021-04-20 12:29:00.000000",
-        "timezone_type": 3,
-        "timezone": "Australia/SYDNEY"
-      },
-      "activityName": "11 Tutorial WE (Room B302)",
-      "displayTime": "Period T (12:00 pm)",
-      "period": "T",
-      "strCount": 14,
-      "room": " (Room B302)",
-      "time": "12:00",
-      "subMenuDataURL": "show",
-      "links": [
-        {
-          "text": "<div style=\"font-size: 13px; font-weight: bold;\">Email Teacher</div>",
-          "href": "mailto:?subject=RE:11 Tutorial WE&bcc=asharman@sacs.nsw.edu.au",
-          "xtype": "edutoolbarcalendarbuttonmenuitem"
-        }
-      ]
-    },
-    {
-      "eventType": "class",
-      "startDateTime": {
-        "date": "2021-04-20 13:10:00.000000",
-        "timezone_type": 3,
-        "timezone": "Australia/SYDNEY"
-      },
-      "endDateTime": {
-        "date": "2021-04-20 14:09:00.000000",
-        "timezone_type": 3,
-        "timezone": "Australia/SYDNEY"
-      },
-      "activityName": "11IB Theory of Knowledge 1 (Room B208)",
-      "displayTime": "Period 4 (01:10 pm)",
-      "period": "4",
-      "strCount": 26,
-      "room": " (Room B208)",
-      "time": "13:10",
-      "subMenuDataURL": "show",
-      "links": [
-        {
-          "text": "<div style=\"font-size: 13px; font-weight: bold;\">Email Teacher</div>",
-          "href": "mailto:?subject=RE:11IB Theory of Knowledge 1&bcc=jhall@sacs.nsw.edu.au",
-          "xtype": "edutoolbarcalendarbuttonmenuitem"
-        }
-      ]
-    },
-    {
-      "eventType": "class",
-      "startDateTime": {
-        "date": "2021-04-20 14:15:00.000000",
-        "timezone_type": 3,
-        "timezone": "Australia/SYDNEY"
-      },
-      "endDateTime": {
-        "date": "2021-04-20 15:14:00.000000",
-        "timezone_type": 3,
-        "timezone": "Australia/SYDNEY"
-      },
-      "activityName": "11IB Computer Science HL 1 (B125 Computer Room)",
-      "displayTime": "Period 5 (02:15 pm)",
-      "period": "5",
-      "strCount": 26,
-      "room": " (B125 Computer Room)",
-      "time": "14:15",
-      "subMenuDataURL": "show",
-      "links": [
-        {
-          "text": "<div style=\"font-size: 13px; font-weight: bold;\">Email Teacher</div>",
-          "href": "mailto:?subject=RE:11IB Computer Science HL 1&bcc=mthill@sacs.nsw.edu.au",
-          "xtype": "edutoolbarcalendarbuttonmenuitem"
-        }
-      ]
-    }
-  ]
-}
+main()
 
-'''
+# print("--- %.2f seconds ---" % (time.time() - start_time)) # Fastest time to auto login, type today, quit program by pressing enter was: 11.26 seconds
 
-'''
-{'eventType': 'class', 'startDateTime': {'date': '2021-04-21 12:00:00.000000', 'timezone_type': 3, 'timezone': 'Australia/SYDNEY'}, 'endDateTime': {'date': '2021-04-21 12:29:00.000000', 'timezone_type': 3, 'timezone': 'Australia/SYDNEY'}, 'activityName': '11 Tutorial WE (Room B302)', 'displayTime': 'Period T (12:00 pm)', 'period': 'T', 'strCount': 14, 'room': ' (Room B302)', 'time': '12:00', 'subMenuDataURL': 'show', 'links': [{'text': '<div style="font-size: 13px; font-weight: bold;">Email Teacher</div>', 'href': 'mailto:?subject=RE:11 Tutorial WE&bcc=asharman@sacs.nsw.edu.au', 'xtype': 'edutoolbarcalendarbuttonmenuitem'}]}
-Period T: 11 Tutorial WE (Room B302)
-{'eventType': 'event', 'startDateTime': {'date': '2021-04-21 12:00:00.000000', 'timezone_type': 3, 'timezone': 'Australia/SYDNEY'}, 'endDateTime': {'date': '2021-04-21 12:29:00.000000', 'timezone_type': 3, 'timezone': 'Australia/SYDNEY'}, 'activityName': 'Event: Yr 7 Westminster Peer Support Program (S436)', 'displayTime': '12:00 pm - 12:29 pm', 'strCount': 44, 'room': ' (S436)', 'time': '12:00', 'subMenuDataURL': 'show', 'links': [{'text': '<div style="font-size: 13px; font-weight: bold;">Details</div>', 'xtype': 'edutoolbarnewbuttonmenuitemeventdetail', 'eventId': 50498}]}
-'''
+# With auto today's timetable followed by return: 10.94 seconds
+
+# Fastest time with Edumate with autofill password: 21.90 seconds. ~ 2 seconds slower without autofill on desktop.
+
+# Therefore, my program is roughly 2x faster than using Edumate in a browser on a laptop

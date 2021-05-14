@@ -1,0 +1,241 @@
+{
+  "label": "Tue, 11<sup>th</sup> May 2021",
+  "SQLDate": "2021-05-11",
+  "events": [
+    {
+      "eventType": "class",
+      "startDateTime": {
+        "date": "2021-05-11 07:30:00.000000",
+        "timezone_type": 3,
+        "timezone": "Australia/SYDNEY"
+      },
+      "endDateTime": {
+        "date": "2021-05-11 08:29:00.000000",
+        "timezone_type": 3,
+        "timezone": "Australia/SYDNEY"
+      },
+      "activityName": "CM Wind Symphony (Chapter House)",
+      "displayTime": "Period 0 (07:30 am)",
+      "period": "0",
+      "strCount": 16,
+      "room": " (Chapter House)",
+      "time": "07:30",
+      "subMenuDataURL": "show",
+      "links": [
+        {
+          "text": "<div style=\"font-size: 13px; font-weight: bold;\">Email Teacher</div>",
+          "href": "mailto:?subject=RE:CM Wind Symphony&bcc=cwatson@sacs.nsw.edu.au",
+          "xtype": "edutoolbarcalendarbuttonmenuitem"
+        }
+      ]
+    },
+    {
+      "eventType": "class",
+      "startDateTime": {
+        "date": "2021-05-11 08:30:00.000000",
+        "timezone_type": 3,
+        "timezone": "Australia/SYDNEY"
+      },
+      "endDateTime": {
+        "date": "2021-05-11 09:29:00.000000",
+        "timezone_type": 3,
+        "timezone": "Australia/SYDNEY"
+      },
+      "activityName": "11IB Business Management SL 1 (Room B205)",
+      "displayTime": "Period 1 (08:30 am)",
+      "period": "1",
+      "strCount": 29,
+      "room": " (Room B205)",
+      "time": "08:30",
+      "subMenuDataURL": "show",
+      "links": [
+        {
+          "text": "<div style=\"font-size: 13px; font-weight: bold;\">Email Teacher</div>",
+          "href": "mailto:?subject=RE:11IB Business Management SL 1&bcc=alarkin@sacs.nsw.edu.au",
+          "xtype": "edutoolbarcalendarbuttonmenuitem"
+        }
+      ]
+    },
+    {
+      "eventType": "class",
+      "startDateTime": {
+        "date": "2021-05-11 09:35:00.000000",
+        "timezone_type": 3,
+        "timezone": "Australia/SYDNEY"
+      },
+      "endDateTime": {
+        "date": "2021-05-11 10:34:00.000000",
+        "timezone_type": 3,
+        "timezone": "Australia/SYDNEY"
+      },
+      "activityName": "11IB Language and Literature HL 1 (Room B304)",
+      "displayTime": "Period 2 (09:35 am)",
+      "period": "2",
+      "strCount": 33,
+      "room": " (Room B304)",
+      "time": "09:35",
+      "subMenuDataURL": "show",
+      "links": [
+        {
+          "text": "<div style=\"font-size: 13px; font-weight: bold;\">Email Teacher</div>",
+          "href": "mailto:?subject=RE:11IB Language and Literature HL 1&bcc=ngoodman@sacs.nsw.edu.au",
+          "xtype": "edutoolbarcalendarbuttonmenuitem"
+        }
+      ]
+    },
+    {
+      "eventType": "class",
+      "startDateTime": {
+        "date": "2021-05-11 10:55:00.000000",
+        "timezone_type": 3,
+        "timezone": "Australia/SYDNEY"
+      },
+      "endDateTime": {
+        "date": "2021-05-11 11:54:00.000000",
+        "timezone_type": 3,
+        "timezone": "Australia/SYDNEY"
+      },
+      "activityName": "11IB Physics HL 1 (B120 Science Lab)",
+      "displayTime": "Period 3 (10:55 am)",
+      "period": "3",
+      "strCount": 17,
+      "room": " (B120 Science Lab)",
+      "time": "10:55",
+      "subMenuDataURL": "show",
+      "links": [
+        {
+          "text": "<div style=\"font-size: 13px; font-weight: bold;\">Email Teacher</div>",
+          "href": "mailto:?subject=RE:11IB Physics HL 1&bcc=sfoster@sacs.nsw.edu.au",
+          "xtype": "edutoolbarcalendarbuttonmenuitem"
+        }
+      ]
+    },
+    {
+      "activityId": 60651,
+      "eventType": "activity",
+      "startDateTime": {
+        "date": "2021-05-11 11:21:00.000000",
+        "timezone_type": 3,
+        "timezone": "Australia/SYDNEY"
+      },
+      "endDateTime": {
+        "date": "2021-05-11 11:36:00.000000",
+        "timezone_type": 3,
+        "timezone": "Australia/SYDNEY"
+      },
+      "activityName": "Appt: Westminster Leadership Interview (B210)",
+      "displayTime": "11:21 am - 11:36 am",
+      "strCount": 38,
+      "room": " (B210)",
+      "time": "11:21",
+      "subMenuDataURL": ""
+    },
+    {
+      "eventType": "class",
+      "startDateTime": {
+        "date": "2021-05-11 12:00:00.000000",
+        "timezone_type": 3,
+        "timezone": "Australia/SYDNEY"
+      },
+      "endDateTime": {
+        "date": "2021-05-11 12:29:00.000000",
+        "timezone_type": 3,
+        "timezone": "Australia/SYDNEY"
+      },
+      "activityName": "11 Tutorial WE (BBC Auditorium)",
+      "displayTime": "Period T (12:00 pm)",
+      "period": "T",
+      "strCount": 14,
+      "room": " (BBC Auditorium)",
+      "time": "12:00",
+      "subMenuDataURL": "show",
+      "links": [
+        {
+          "text": "<div style=\"font-size: 13px; font-weight: bold;\">Email Teacher</div>",
+          "href": "mailto:?subject=RE:11 Tutorial WE&bcc=asharman@sacs.nsw.edu.au",
+          "xtype": "edutoolbarcalendarbuttonmenuitem"
+        }
+      ]
+    },
+    {
+      "eventType": "class",
+      "startDateTime": {
+        "date": "2021-05-11 13:10:00.000000",
+        "timezone_type": 3,
+        "timezone": "Australia/SYDNEY"
+      },
+      "endDateTime": {
+        "date": "2021-05-11 14:09:00.000000",
+        "timezone_type": 3,
+        "timezone": "Australia/SYDNEY"
+      },
+      "activityName": "11IB Mathematics Analysis &amp; Approaches HL 1 (Room B308)",
+      "displayTime": "Period 4 (01:10 pm)",
+      "period": "4",
+      "strCount": 47,
+      "room": " (Room B308)",
+      "time": "13:10",
+      "subMenuDataURL": "show",
+      "links": [
+        {
+          "text": "<div style=\"font-size: 13px; font-weight: bold;\">Email Teacher</div>",
+          "href": "mailto:?subject=RE:11IB Mathematics Analysis &amp; Approaches HL 1&bcc=bperry@sacs.nsw.edu.au",
+          "xtype": "edutoolbarcalendarbuttonmenuitem"
+        }
+      ]
+    },
+    {
+      "eventType": "class",
+      "startDateTime": {
+        "date": "2021-05-11 14:15:00.000000",
+        "timezone_type": 3,
+        "timezone": "Australia/SYDNEY"
+      },
+      "endDateTime": {
+        "date": "2021-05-11 15:14:00.000000",
+        "timezone_type": 3,
+        "timezone": "Australia/SYDNEY"
+      },
+      "activityName": "11IB Theory of Knowledge 1 (Room B208)",
+      "displayTime": "Period 5 (02:15 pm)",
+      "period": "5",
+      "strCount": 26,
+      "room": " (Room B208)",
+      "time": "14:15",
+      "subMenuDataURL": "show",
+      "links": [
+        {
+          "text": "<div style=\"font-size: 13px; font-weight: bold;\">Email Teacher</div>",
+          "href": "mailto:?subject=RE:11IB Theory of Knowledge 1&bcc=jhall@sacs.nsw.edu.au",
+          "xtype": "edutoolbarcalendarbuttonmenuitem"
+        }
+      ]
+    },
+    {
+      "eventType": "event",
+      "startDateTime": {
+        "date": "2021-05-11 14:15:00.000000",
+        "timezone_type": 3,
+        "timezone": "Australia/SYDNEY"
+      },
+      "endDateTime": {
+        "date": "2021-05-11 14:45:00.000000",
+        "timezone_type": 3,
+        "timezone": "Australia/SYDNEY"
+      },
+      "activityName": "Event: 2.15pm SL interview (B110 (Mr Lindsay&#039;s office))",
+      "displayTime": "02:15 pm - 02:45 pm",
+      "strCount": 26,
+      "room": " (B110 (Mr Lindsay&#039;s office))",
+      "time": "14:15",
+      "subMenuDataURL": "show",
+      "links": [
+        {
+          "text": "<div style=\"font-size: 13px; font-weight: bold;\">Details</div>",
+          "xtype": "edutoolbarnewbuttonmenuitemeventdetail",
+          "eventId": 52216
+        }
+      ]
+    }
+  ]
+}
