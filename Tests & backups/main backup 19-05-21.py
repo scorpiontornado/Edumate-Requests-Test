@@ -1,4 +1,4 @@
-# Most current version of the code as of 19/05/2021
+# Most current version of the code as of 19/05/2021 (before working on it)
 
 # Order of requests:
   # Request 1: Get request to url1 - response contains Authstate parameter (generated each time)
@@ -15,8 +15,10 @@ import html
 
 import time # to test runtime
 
-def get_timetable_json(session, url_stem, my_date):
+def get_timetable(session, url_stem, my_date):
   response = session.get(url_stem + my_date)
+
+  timetable = []
     
   if response.status_code == 200:
     # Will also return 200 if login fails 
@@ -24,63 +26,31 @@ def get_timetable_json(session, url_stem, my_date):
     #print (response.headers.get('content-type')) # always: text/plain; charset=UTF-8
     #print(response.content) # looks like json to me..
     try:
-      timetable_json = {
-        "data": response.json(),
-        "status": 0
-      }
+      timetable_json = response.json()
 
-      #timetable_data = json.dumps(timetable_json, indent=2) # makes it look pretty for printing, converts into a string
 
-      #print(timetable_data) # debugging
+      timetable_data = json.dumps(timetable_json, indent=2) # makes it look pretty for printing, converts into a string
+
+      #print(timetable_data)
+
+      # Get class in each period:
+      for i, event in enumerate(timetable_json["events"]):
+        event_type = event["eventType"]
+        activity_name = html.unescape(event["activityName"])
+        if event_type == "class":
+          period = html.unescape(event["period"])
+          timetable.append(f"Period\t{period}: {activity_name}")
+        else:
+          # event_type == "activity", "event" etc
+          display_time = html.unescape(event["displayTime"]) # probably not necessary
+          timetable.append(f"\t{display_time}:\n\t\t{activity_name}")
     except ValueError:
-
-      timetable_json = {
-        "data": "Login failed",
-        "status": -1
-        }
+      print("Login failed")
+      timetable = -1
   else:
-    timetable_json = {
-      "data": "Invalid date",
-      "status": 1
-    }
+    timetable = ["Invalid date"]
   
-  # timetable_json["status"]:
-  # 0: ok
-  # positive: problem, continue
-  # negative: problem, terminate
-
-  return timetable_json
-
-def get_classes_date(session, url_stem, my_date):
-  timetable_json = get_timetable_json(session, url_stem, my_date)
-
-  timetable = {
-    "data": [],
-  }
-
-  timetable["status"] = timetable_json["status"]
-
-  if timetable_json["status"] == 0:
-    for i, event in enumerate(timetable_json["data"]["events"]):
-      event_type = event["eventType"]
-      activity_name = html.unescape(event["activityName"])
-      if event_type == "class":
-        period = html.unescape(event["period"])
-        timetable["data"].append(f"Period\t{period}: {activity_name}")
-      else:
-        # event_type == "activity", "event" etc
-        display_time = html.unescape(event["displayTime"]) # probably not necessary
-        timetable["data"].append(f"\t{display_time}:\n\t\t{activity_name}")
-  else:
-    timetable["data"] = [timetable_json["data"]]
-
   return timetable
-
-def get_room_period(timetable_json):
-  pass
-
-def get_start_time(timetable_json):
-  pass
 
 def main():
   # the session automatically handles the cookies for me.
@@ -146,19 +116,18 @@ def main():
 
     url4_stem = "https://edumate.sacs.nsw.edu.au/sacs/web/app.php/admin/get-day-calendar/"
 
-    timetable = get_classes_date(s, url4_stem, "today")
-    print("\nToday's timetable:", "\n".join(timetable["data"]), sep="\n")
+    timetable = get_timetable(s, url4_stem, "today")
+    print("\nToday's timetable:", "\n".join(timetable), sep="\n")
 
     # return # for time testing
 
     my_date = input("\nDate (YYYYMMDD or today/tomorrow etc.): ")
     while my_date:
-      timetable = get_classes_date(s, url4_stem, my_date)
+      timetable = get_timetable(s, url4_stem, my_date)
 
-      print("\n".join(timetable["data"]))
-
-      if timetable["status"] < 0:
+      if timetable == -1:
         break
+      print("\n".join(timetable))
 
       my_date = input("\nDate (YYYYMMDD or today/tomorrow etc.): ")
 
