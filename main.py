@@ -1,4 +1,4 @@
-# Most current version of the code as of 13/05/2021
+# Most current version of the code as of 14/05/2021
 
 # Order of requests:
   # Request 1: Get request to url1 - response contains Authstate parameter (generated each time)
