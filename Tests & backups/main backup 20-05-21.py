@@ -1,4 +1,4 @@
-# Most current version of the code as of 19/05/2021
+# Most current version of the code as of 20/05/2021 (beginning)
 
 # Order of requests:
   # Request 1: Get request to url1 - response contains Authstate parameter (generated each time)
@@ -15,7 +15,7 @@ import html
 
 import time # to test runtime
 
-def get_events_date(session, url_stem, my_date):
+def get_timetable_json(session, url_stem, my_date):
   response = session.get(url_stem + my_date)
     
   if response.status_code == 200:
@@ -24,29 +24,21 @@ def get_events_date(session, url_stem, my_date):
     #print (response.headers.get('content-type')) # always: text/plain; charset=UTF-8
     #print(response.content) # looks like json to me..
     try:
-      timetable_json = response.json()
-      events = timetable_json["events"]
-      if len(events) > 0:
-        events = {
-          "data": events,
-          "status": 0
-        }
-      else:
-        events = {
-          "data": "No events for that day",
-          "status": 2
-        }
+      timetable_json = {
+        "data": response.json(),
+        "status": 0
+      }
 
       #timetable_data = json.dumps(timetable_json, indent=2) # makes it look pretty for printing, converts into a string
 
       #print(timetable_data) # debugging
     except ValueError:
-      events = {
+      timetable_json = {
         "data": "Login failed",
         "status": -1
         }
   else:
-    events = {
+    timetable_json = {
       "data": "Invalid date",
       "status": 1
     }
@@ -56,17 +48,19 @@ def get_events_date(session, url_stem, my_date):
   # positive: problem, continue
   # negative: problem, terminate
 
-  return events
+  return timetable_json
 
-def format_classes_date(events):
+def get_classes_date(session, url_stem, my_date):
+  timetable_json = get_timetable_json(session, url_stem, my_date)
+
   timetable = {
     "data": [],
   }
 
-  timetable["status"] = events["status"]
+  timetable["status"] = timetable_json["status"]
 
-  if events["status"] == 0:
-    for i, event in enumerate(events["data"]):
+  if timetable_json["status"] == 0:
+    for i, event in enumerate(timetable_json["data"]["events"]):
       event_type = event["eventType"]
       activity_name = html.unescape(event["activityName"])
       if event_type == "class":
@@ -77,28 +71,15 @@ def format_classes_date(events):
         display_time = html.unescape(event["displayTime"]) # probably not necessary
         timetable["data"].append(f"\t{display_time}:\n\t\t{activity_name}")
   else:
-    timetable["data"] = events["data"] # Get the error message
+    timetable["data"] = [timetable_json["data"]] # Get the error message
 
   return timetable
 
-def get_room_period(events):
+def get_room_period(timetable_json):
   pass
 
-def get_start_time(events):
-  start_time = {
-    "data": [],
-  }
-
-  start_time["status"] = events["status"]
-
-  if events["status"] == 0:
-    first_period = events["data"][0]
-    start_date_time = html.unescape(first_period["startDateTime"]["date"]) # will output something like '2021-05-20 08:30:00.000000' (unescaping probably unecessary)
-    start_time["data"] = start_date_time.split()[1][:8] # will get first 8 characters of start time
-  else:
-    start_time["data"] = events["data"] # Get the error message
-
-  return start_time
+def get_start_time(timetable_json):
+  pass
 
 def main():
   # the session automatically handles the cookies for me.
@@ -164,30 +145,19 @@ def main():
 
     url4_stem = "https://edumate.sacs.nsw.edu.au/sacs/web/app.php/admin/get-day-calendar/"
 
-    today_events = get_events_date(s, url4_stem, "today") # Get raw events for today
-
-    start_time = get_start_time(today_events)
-    timetable = format_classes_date(today_events)
-    
-    print("\nToday's start time:", start_time["data"], sep="\n")
+    timetable = get_classes_date(s, url4_stem, "today")
     print("\nToday's timetable:", "\n".join(timetable["data"]), sep="\n")
 
     # return # for time testing
 
     my_date = input("\nDate (YYYYMMDD or today/tomorrow etc.): ")
     while my_date:
-      date_events = get_events_date(s, url4_stem, my_date)
-      timetable = format_classes_date(date_events)
-      start_time = get_start_time(date_events)
+      timetable = get_classes_date(s, url4_stem, my_date)
 
-      if timetable["status"] == 0:
-        print(f"\nStart time for {my_date}:", start_time["data"], sep="\n")
-        print(f"\nTimetable for {my_date}:", "\n".join(timetable["data"]), sep="\n")
-      elif timetable["status"] < 0:
-        print(timetable["data"])
+      print("\n".join(timetable["data"]))
+
+      if timetable["status"] < 0:
         break
-      else:
-        print("\n" + timetable["data"])
 
       my_date = input("\nDate (YYYYMMDD or today/tomorrow etc.): ")
 
